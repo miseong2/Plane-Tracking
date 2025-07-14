@@ -1,6 +1,5 @@
-# Plane-Tracking
-real time aircraft detection and tracking system using OpenCV and YOLO.
-# 실시간 항공기 객체 탐지 및 추적 시스템
+# 실시간 항공기 추적 시스템
+OpenCV의 CSRT Tracker를 이용한 실시간 항공기 추적 및 카메라 방향 제어 시스템입니다.
 
 LIG넥스원 광정보융합연구소의 탐색기 기술에 대한 이해를 높이고자, 딥러닝과 컴퓨터 비전 기술을 활용하여 실시간으로 객체를 탐지하고 추적하는 프로젝트를 진행했습니다.
 
