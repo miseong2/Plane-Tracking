@@ -1,0 +1,20 @@
+# Plane-Tracking
+real time aircraft detection and tracking system using OpenCV and YOLO.
+# 실시간 항공기 객체 탐지 및 추적 시스템
+
+LIG넥스원 광정보융합연구소의 탐색기 기술에 대한 이해를 높이고자, 딥러닝과 컴퓨터 비전 기술을 활용하여 실시간으로 객체를 탐지하고 추적하는 프로젝트를 진행했습니다.
+
+# 개발 기간
+- 2025.07.12 ~ 진행 중
+
+# 기술 스택
+- Language: Python
+- Library: OpenCV, PyTorch
+
+# 주요 기능
+
+
+# 프로젝트 진행 기록 (Log)
+- **2025.07.13:** 프로젝트 시작. yolo를 이용해 영상의 비행기 실시간 탐지 성공
+- **2025.07.14:** opencv의 tracker를 이용해, yolo로 한번 탐지한 객체를 계속 따라가도록 하는 시스템 개발
+- 
