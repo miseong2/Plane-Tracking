@@ -3,38 +3,66 @@ from ultralytics import YOLO
 
 model = YOLO('yolov8n.pt')
 cap = cv2.VideoCapture('test_video.mp4')
-
-# 추적할 객체의 클래스 이름 (COCO 데이터셋 기준: 'airplane')
 TARGET_CLASS = 'airplane'
-
-# 추적기 상태 변수
 tracker = None
+#추적 상태 변수
 is_tracking = False
 
 WINDOW_NAME = "Detection and Tracking"
 cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL) 
+
 
 while True:
     ret, frame = cap.read()
     if not ret:
         print('프레임 읽기 실패')
         break
-
     
     frame_height, frame_width = frame.shape[:2]
+    center_x = frame_width//2
+    center_y = frame_height//2
+    #화면 중앙에 빨간 점 표시
+    cv2.circle(frame, (center_x, center_y), 5, (0,0,255), -1)
+    
+    command = ""
 
     if is_tracking:
         # 추적기가 활성화된 상태라면, 추적을 계속 수행
         success, bbox = tracker.update(frame)
+        #추적 성공
         if success:
-            # 추적 성공 시, 새로운 바운딩 박스를 화면에 그림
+            #바운딩박스 그림
             (x, y, w, h) = [int(v) for v in bbox]
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(frame, "Tracking", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+            
+            #객체 위치, 오차 계산 후 제어 명령 생성
+            obj_center_x = x+(w//2)
+            obj_center_y = y+(h//2) # y는 아래로 갈수록 증가
+            cv2.circle(frame, (obj_center_x, obj_center_y), 5, (0,255,0), -1)
+            #cv2.circle(frame, (x, y), 5, (0,255,255), -1)
+            error_x = center_x - obj_center_x #양수(객체가 화면의 오른쪽)면 카메라 오른쪽 이동
+            error_y = center_y - obj_center_y #양수면 카메라 위쪽 이동
+            
+            deadzone = 50
+            if (error_x > deadzone):
+                command += 'RIGHT'
+            elif (error_x < -deadzone):
+                command += 'LEFT'
+            if (error_y > deadzone):
+                command += 'UP'
+            elif (error_y < -deadzone):
+                command += 'DOWN'
+            if command == "":
+                command = 'ON TARGET'
+            
         else:
             # 추적 실패 시, 추적기 리셋
             is_tracking = False
             tracker = None
+            command = 'TARGET LOST'
+            
+            
     else:
         # 추적기가 비활성화된 상태라면, YOLO로 객체 탐지
         results = model(frame)
@@ -65,7 +93,9 @@ while True:
                         break # 첫 번째 비행기만 찾고 루프 종료
             if is_tracking:
                 break
+            command = 'SEARCHING...'
 
+    cv2.putText(frame, command, (20, 40), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0,0,0), 2)
     cv2.imshow(WINDOW_NAME, frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
