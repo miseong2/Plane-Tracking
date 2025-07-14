@@ -1,0 +1,13 @@
+// {
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "name": "Run lessgo.py",
+//             "type": "python",
+//             "request": "launch",
+//             "program": "${workspaceFolder}/lessgo/lessgo.py",
+//             "cwd": "${workspaceFolder}/lessgo", 
+//             "console": "integratedTerminal"
+//         }
+//     ]
+// }
